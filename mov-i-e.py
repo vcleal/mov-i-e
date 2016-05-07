@@ -1,4 +1,5 @@
 #!/usr/bin/python
+#encoding:utf-8
 
 import numpy as np
 import cv2
@@ -7,56 +8,78 @@ import matplotlib.pyplot as plt
 
 Demo = True
 
-# Abre stream na webcam 0
-cap = cv2.VideoCapture(0)
+# Converte frame para escala de cinza
+toGray = lambda frame: cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-last = None
+# Filtro gaussiano 9x9
+gaussianFilter = lambda img, shape: cv2.GaussianBlur(img, shape, 0)
 
-while(True):
+# Laplaciano da imagem
+laplacian = lambda z2, z1, z0: -z2/2 + z1 -z0/2
+
+# "Diferença" da imagem
+#frameDelta = cv2.absdiff(last,filtered)
+
+# Deslocamento:
+z = lambda array: np.roll(array,-1,axis=0)
+
+# Threshold 15
+threshold = lambda img, t: cv2.threshold(img, t, 255, cv2.THRESH_BINARY)[1]
+
+
+if __name__ == "__main__":
+
+  # Abre stream na webcam 0
+  cap = cv2.VideoCapture(0)
   
-  # Captura um quadro
-  ret, frame = cap.read()
+  dir(cap)
 
-  # Converte frame para escala de cinza
-  gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+  # Ultimas duas imagens
+  z1 = None
+  z2 = None
 
-  # Filtro gaussiano 9x9
-  filtered = cv2.GaussianBlur(gray, (9, 9), 0)
-
-  try:
-    # "Derivada" da imagem
-    frameDelta = cv2.absdiff(last,filtered)
-    last = filtered
+  while(True):
     
-  except:
-    last = filtered
-    continue
-  
-  # Threshold 10
-  ret, thresh = cv2.threshold(frameDelta, 15, 255, cv2.THRESH_BINARY)
-  
-  # Contornos 
-  im2, contours = cv2.findContours(thresh.copy(),cv2.RETR_EXTERNAL ,cv2.CHAIN_APPROX_TC89_L1)
-  cv2.drawContours(frame, im2, -1, (0,0,255), 3)
-
-
-  # Cria janela e mostra o frame
-  if Demo:
-    cv2.namedWindow("imagem", cv2.WINDOW_NORMAL); 
-    cv2.imshow('imagem',frame)
+    # Captura um quadro
+    ret, frame = cap.read()
     
-    cv2.namedWindow("filtrada", cv2.WINDOW_NORMAL); 
-    cv2.imshow('filtrada',filtered)
+    gray = toGray(frame)
+    filtered = gaussianFilter(gray, (9,9))
+
+    try:
+      lap = laplacian(z2, z1, filtered)   
+      z2 = z1
+      z1 = filtered   
+      
+    # Condição de inicialização: 3 imagens capturadas  
+    except TypeError:
+      z2 = z1
+      z1 = filtered
+      continue
     
-    cv2.namedWindow("diferencial", cv2.WINDOW_NORMAL); 
-    cv2.imshow('diferencial',frameDelta)
+    thresh = threshold(lap, 135)
     
-    cv2.namedWindow("threshold", cv2.WINDOW_NORMAL); 
-    cv2.imshow('threshold',thresh)
-       
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-      break
+    # Contornos 
+    im2, contours = cv2.findContours(thresh.copy(),cv2.RETR_EXTERNAL ,cv2.CHAIN_APPROX_NONE)
 
 
-cap.release()
-cv2.destroyAllWindows()
+    # Cria janela e mostra o frame
+    if Demo:
+      cv2.namedWindow("imagem", cv2.WINDOW_NORMAL); 
+      cv2.imshow('imagem',frame)
+      
+      cv2.namedWindow("filtrada", cv2.WINDOW_NORMAL); 
+      cv2.imshow('filtrada',filtered)
+      
+      cv2.namedWindow("diferencial", cv2.WINDOW_NORMAL); 
+      cv2.imshow('diferencial',lap)
+      
+      cv2.namedWindow("threshold", cv2.WINDOW_NORMAL); 
+      cv2.imshow('threshold',thresh)
+         
+      if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+
+  cap.release()
+  cv2.destroyAllWindows()
