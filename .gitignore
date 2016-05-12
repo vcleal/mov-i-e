@@ -1,6 +1,9 @@
 # Swap files
 .*.swp
 
+# PYC files
+*.pyc
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
