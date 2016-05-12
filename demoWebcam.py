@@ -7,17 +7,18 @@ from  processing import *
 from imageIterator import Iterator
 
 
+# Abre stream na webcam 0
+cap = cv2.VideoCapture(0)
+capture = lambda : cap.read()[1]
+
+# Preprocessamento (escala de cinza e filtro gaussiano)
+pre = lambda img: gaussianFilter(toGray(img), (11,11))
+
+# Iterador do stream
+it = Iterator(capture, preprocess=pre)
+
+
 if __name__ == "__main__":
-
-  # Abre stream na webcam 0
-  cap = cv2.VideoCapture(0)
-  capture = lambda : cap.read()[1]
-  
-  # Preprocessamento (escala de cinza e filtro gaussiano)
-  pre = lambda img: gaussianFilter(toGray(img), (11,11))
-
-  # Iterador do stream
-  it = Iterator(capture, preprocess=pre)
   
   # Loop de captura
   for i in it:

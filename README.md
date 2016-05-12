@@ -9,11 +9,9 @@ Application for recording videos based on movement detection (even with shitty w
 
 **Functions:**
 - demoWebcam.py (demonstrate how movement detection works using real time webcam capture)
-- mov-i-e.py (records movement) -- TODO!
+- mov-i-e.py (records movement)
 
 **Auxiliary Scripts:**
 - processing.py (low coupling image processing techniques)
 - imageIterator.py (image iterator for video processing)
 
-**Old Scripts:**
-- cam.py (first experiment)
