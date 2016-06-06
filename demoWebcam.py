@@ -25,9 +25,8 @@ for i in it:
   lap = laplacian(i)
   thresh = threshold(lap, 139)
   
-  # Contornos 
-  im2, contours = cv2.findContours(thresh.copy(),cv2.RETR_EXTERNAL ,cv2.CHAIN_APPROX_SIMPLE)
-  cv2.drawContours(frame, im2, -1, (0,255,0), 3)
+  # Destaca regiões com movimento
+  frame[thresh>0]=(0,255,0) 
   
   cv2.namedWindow("imagem", cv2.WINDOW_NORMAL);
   cv2.imshow('imagem',frame)
