@@ -11,8 +11,13 @@ from imageIterator import Iterator
 cap = cv2.VideoCapture(0)
 capture = lambda : cap.read()[1]
 
-# Preprocessamento (escala de cinza e filtro gaussiano)
-pre = lambda img: gaussianFilter(toGray(img), (11,11))
+def pre(img):
+  """ Função de preprocessamento do iterador. """
+  
+  gray = toGray(img)
+  filt = gaussianFilter(gray, (11,11))
+  
+  return filt
 
 # Iterador do stream
 it = Iterator(capture, preprocess=pre)
