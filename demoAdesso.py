@@ -40,9 +40,6 @@ for i in it:
   frame[thresh>0]=(0,255,0) 
   
   adshow(frame, 'imagem')
-  adshow(filtered,'filtrada')
-  adshow(lap, 'diferencial')
-  adshow(thresh, 'threshold')
   
   if cv2.waitKey(1) & 0xFF == ord('q'):
     break
