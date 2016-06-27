@@ -3,16 +3,6 @@
 import numpy as np
 
 class Iterator(object):
-  
-  # Fonte de captura
-  capture = None
-
-  imgBuffer = None
-
-  raw = None
-
-  preprocess = lambda x:x
-  
 
   def __init__(self, capture, preprocess=lambda x:x, bufferSize=3):
     """ Inicializa um buffer de imagens. """
