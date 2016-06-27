@@ -15,7 +15,7 @@ def pre(img):
   """ Função de preprocessamento do iterador. """
   
   gray = toGray(img)
-  filt = gaussianFilter(gray, (11,11))
+  filt = medianFilter(gray, 11)
   
   return filt
 
