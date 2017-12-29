@@ -28,7 +28,9 @@ def pre(img):
   return filt
 
 def main():
-  # TODO use other smtp servers and separate fields
+  # TODO use other smtp servers
+  # TODO smtp fields
+  # TODO combine notify/email flag and counter
   args = _parse_arguments()
   notify = False
   email = 1
@@ -66,7 +68,7 @@ def main():
 
       if email < 10:
       	email += 1
-      if email == 10:
+      if email == 10 and notify:
         email += 1
         eh.connect()
 

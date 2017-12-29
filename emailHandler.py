@@ -10,7 +10,7 @@ class EmailHandler(object):
 		self.fromaddr = fromaddr
 		self.toaddr = toaddr
 		self.msg = msg
-		self.passwd = getpass.getpass()
+		self.passwd = getpass.getpass("Email password:")
 
 	def connect(self):
 		try:
