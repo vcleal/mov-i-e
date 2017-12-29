@@ -32,7 +32,7 @@ class Iterator(object):
     
     self.raw = self.capture()
     
-    if self.raw == None:
+    if self.raw is None:
       raise StopIteration
       
     self.imgBuffer = np.roll(self.imgBuffer,-1,axis=0)    
