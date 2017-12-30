@@ -7,6 +7,8 @@ Application for recording videos based on movement detection (even with shitty w
 - OpenCV
 - Python cv2
 
+`pip install -r requirements.txt`
+
 **Functions:**
 - demoWebcam.py (demonstrates how movement detection works using real time webcam capture)
 - mov-i-e.py (records movement)
