@@ -1,5 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #encoding:utf-8
+
+  # TODO use other smtp servers
+  # TODO use only threading module?
+  # TODO background frame timer
 
 import smtplib
 import numpy as np
@@ -9,7 +13,9 @@ from processing import *
 from imageIterator import Iterator
 from datetime import datetime
 from emailHandler import EmailHandler
+from repeatableTimer import RepeatableTimer
 import thread
+
 
 def _parse_arguments():
     # Argument and command-line options parsing
@@ -29,12 +35,9 @@ def pre(img):
   return filt
 
 def main():
-  # TODO use other smtp servers
-  # TODO smtp field / email module
-  # TODO combine notify/email flag and counter
   args = _parse_arguments()
   notify = False
-  email = 1
+  count = 0
   if args.fromaddr:
     notify = True
     msg = raw_input("Message to send: ")
@@ -45,7 +48,7 @@ def main():
     else:
       eh = EmailHandler(args.fromaddr,args.toaddr)
 
-
+  t = RepeatableTimer(60.0, eh.reset)
   # Abre stream na webcam 0
   cap = cv2.VideoCapture(0)
   capture = lambda: cap.read()[1]
@@ -56,6 +59,7 @@ def main():
   fourcc = cv2.VideoWriter_fourcc(*'MJPG')
   out = cv2.VideoWriter('capture/output.avi',fourcc, 30.0, (640,480))
 
+  print "\nPress q to quit..."
   # Loop de captura
   for i in it:
     
@@ -71,11 +75,14 @@ def main():
     # caso de mandar varios emails
     if thr.sum() > 0:
 
-      if email < 10:
-      	email += 1
-      if email == 10 and notify:
-        email += 1
-        thread.start_new_thread(eh.connect,())
+      if eh.email < 10:
+        eh.inc()
+      if eh.email == 10 and notify:
+        eh.inc()
+        cv2.imwrite('capture/screenshot%d.png' % count, frame)
+        thread.start_new_thread(eh.connect,(count,))
+        count += 1
+        t.start()
 
       out.write(frame)    
 
@@ -89,6 +96,7 @@ def main():
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
   # Free's
+  t.cancel()
   cap.release()
   out.release()
   cv2.destroyAllWindows()

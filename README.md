@@ -1,6 +1,6 @@
 # mov-i-e
 Application for recording videos based on movement detection (even with shitty webcams)
-Optional email notification when movement detected. Allow “less secure apps” on your Gmail account.
+Optional email notification when movement detected. Allow “less secure apps” on your Gmail account for it to work.
 
 **Dependencies:**
 - Python 2.7.x
@@ -21,4 +21,5 @@ Optional email notification when movement detected. Allow “less secure apps”
 - processing.py (low coupling image processing techniques)
 - imageIterator.py (image iterator for video processing)
 - emailHandler.py (provides SMTP/email notification)
+- repeatableTimer.py (repeatable threading Timer)
 
