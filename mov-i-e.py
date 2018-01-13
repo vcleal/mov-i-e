@@ -29,7 +29,7 @@ def pre(img):
 
 def main():
   # TODO use other smtp servers
-  # TODO smtp fields
+  # TODO smtp field / email module
   # TODO combine notify/email flag and counter
   args = _parse_arguments()
   notify = False
@@ -39,7 +39,11 @@ def main():
     msg = raw_input("Message to send: ")
     if args.toaddr is None:
       args.toaddr = args.fromaddr
-    eh = EmailHandler(args.fromaddr,args.toaddr,msg)
+    if msg:
+      eh = EmailHandler(args.fromaddr,args.toaddr,msg)
+    else:
+      eh = EmailHandler(args.fromaddr,args.toaddr)
+
 
   # Abre stream na webcam 0
   cap = cv2.VideoCapture(0)
