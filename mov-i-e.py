@@ -9,6 +9,7 @@ from processing import *
 from imageIterator import Iterator
 from datetime import datetime
 from emailHandler import EmailHandler
+import thread
 
 def _parse_arguments():
     # Argument and command-line options parsing
@@ -74,7 +75,7 @@ def main():
       	email += 1
       if email == 10 and notify:
         email += 1
-        eh.connect()
+        thread.start_new_thread(eh.connect,())
 
       out.write(frame)    
 
